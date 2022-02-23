@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Créer un sous-réseau{% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-sm-flex align-items-center mb-4">
+          <h4 class="card-title">Ajouter un sous-réseau</h4>
+        </div>
+          <p class="card-description"><i class="icon-info"></i> Informations sur Sous-réseau</p>
+
+          <form class="forms-sample" method="POST" action="{% url 'ajoutsousreseau' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p style="color: red;">Les champs avec <abbr style="color: red;"></abbr>*</abbr> sont obligatoires.</p>
+            <div class="form-group">
+              <label for="exampleInputName1">Nom du sous-réseau<abbr style="color: red;">*</abbr></label>
+              <input type="text" class="form-control" id="exampleInputName1" name="nomsousreseau" required="required">
+            </div>
+  
+            <div class="form-group row">
+              <div class="col">
+                <label for="exampleSelectGender">Classe de sous-réseau<abbr style="color: red;">*</abbr></label>
+                <select class="form-control js-example-basic-single"  name="cl" id="classe" required="required">
+                  <option value="Classe A: 1.0.0.0 à 126.0.0.0 (Privée: 10.0.0.0)">Classe A</option>
+                  <option value="Classe B: 128.0.0.0 à 191.255.0.0 (Privée: 172.16.0.0 à 172.31.0.0)">Classe B</option>
+                  <option value="Classe C: 192.0.0.0 à 223.255.255.0 (Privée: 192.168.0.0)">Classe C</option>
+                </select>
+                <p class="card-description" style="color:blue"; id="messclass"></p>
+              </div>
+              <div class="col">
+              <label for="exampleTextarea1">Adresse du sous-réseau/réseau<abbr style="color: red;">*</abbr></label>
+              <input type="text" class="form-control" id="exampleInputName1" name="adresse" id="adress" required="required" pattern="((^|\.)((25[0-5]_*)|(2[0-4]\d_*)|(1\d\d_*)|([1-9]?\d_*))){4}_*$">
+              {% for message in messages %} <p class="card-description" style="color:red";>{{message}}</p> {% endfor %} 
+            </div>
+          </div>
+            <div class="form-group row">
+              <div class="col">
+                <label for="exampleSelectGender">Masque de sous-réseau<abbr style="color: red;">*</abbr></label>
+                <select class="form-control js-example-basic-single"  name="taille" id="tail" required="required">
+                 <option>Choisissez un masque</option>
+                  <option value="classeA" disabled>Classe A</option>
+                  <option value="16777214">255.0.0.0/8&nbsp;&nbsp;(16777214 Hôtes)</option>
+                  <!--<option value="8388606">255.128.0.0/9&nbsp;&nbsp;(8388606 Hôtes)</option>
+                  <option value="4194302">255.192.0.0/10&nbsp;&nbsp;(4194302 Hôtes)</option>
+                  <option value="2097150"> 255.224.0.0/11&nbsp;&nbsp;(2097150 Hôtes)</option>-->
+                  
+                 <!--<option value="524286">255.248.0.0/13&nbsp;&nbsp;(524286 Hôtes)</option>
+                  <option value="262142">255.252.0.0/14&nbsp;&nbsp;(262142 Hôtes)</option>
+                  <option value="131070">255.254.0.0/15&nbsp;&nbsp;(131070 Hôtes)</option>-->
+                  <option value="classeB" disabled>Classe B</option>
+                  <option value="1048574">255.240.0.0/12&nbsp;&nbsp;(1048574 Hôtes)</option>
+                  <option value="65534">255.255.0.0/16&nbsp;&nbsp;(65534 Hôtes)</option>
+                  <!--<option value="32766">255.255.128.0/17  (32766 Hôtes)</option>
+                  <option value="16382">255.255.192.0/18  (16382 Hôtes)</option>
+                  <option value="8190">255.255.224.0/19  (8190 Hôtes)</option>
+                  <option value="4094">255.255.240.0/20  (4094 Hôtes)</option>
+                  <option value="2046">255.255.248.0/21  (2046 Hôtes)</option>
+                  <option value="1022">255.255.252.0/22  (1022 Hôtes)</option>
+                  <option value="510">255.255.254.0/23  (510 Hôtes)</option>-->
+                  <option value="classeC" disabled>Classe C</option>
+                  <option value="254">255.255.255.0/24&nbsp;&nbsp;(254 Hôtes)</option>
+                  <!--<option value="126">255.255.255.128/25  (26 Hôtes)</option>
+                  <option value="62">255.255.255.192/26  (62 Hôtes)</option>
+                  <option value="30">255.255.255.224/27  (30 Hôtes)</option>
+                  <option value="14">255.255.255.240/28  (14 Hôtes)</option>
+                  <option value="6">255.255.255.248/29  (6 Hôtes)</option>
+                  <option value="2">255.255.255.252/30  (2 Hôtes)</option>
+                  <option value="2">255.255.255.254/31  (2 Hôtes)</option>
+                  <option value="1">255.255.255.255/32  (1 Hôte)</option>-->
+                </select>
+            </div>
+              <div class="col">
+                <label for="exampleSelectGender">Nom VLAN<abbr style="color: red;">*</abbr></label>
+                <select class="form-control js-example-basic-single"  name="idvlan" required="required">
+                  {% for vlan in lst %} 
+                  <option value="{{vlan.id}}">{{ vlan.nom }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+                
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Ajouter</button>
+            <a href="{% url 'sousreseau' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-dark">Annuler</button></a>
+          </form>
+        </div>
+      </div>
+    </div>
+     </div>   
+ 
+{% endblock %}
+
+

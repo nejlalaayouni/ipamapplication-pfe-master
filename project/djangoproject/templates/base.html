@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+ 
+  <head>
+    <!-- Required meta tags -->
+    {% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% endblock %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <title>{% block title %}     {% endblock %} </title>
+    <!-- plugins:css -->
+    {% block stylesheets %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/vendors/simple-line-icons/css/simple-line-icons.css' %}">
+    <link rel="stylesheet" href="{% static '/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static '/vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static '/vendors/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" href="{% static '/vendors/chartist/chartist.min.css' %}">
+    <link rel="stylesheet" href="{% static '/vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static '/vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/assets/timepicker.css' %}">
+    <link href="{% static '/bootstrap4-glyphicons/css/bootstrap-glyphicons.min.css' %}" rel="stylesheet">
+ 
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+ 
+    <!-- End layout styles -->
+    <style>
+      input[type="text"]:valid{
+color:green;
+}
+
+input[type="text"]:invalid{
+color:red;
+}
+   .caps { font-variant:small-caps;} 
+  
+    </style>
+    {% endblock %}
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex align-items-center">
+          {% load static %}
+          <a class="navbar-brand brand-logo" href="{% url 'dashboard' %}">
+            <img src="{% static '/images/logo.png' %}" alt="logo" class="logo-dark" />
+          </a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">
+          <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Bienvenue {{profile}}</h5>
+          <ul class="navbar-nav navbar-nav-right ml-auto">
+            {% block search %}
+            <!--<form class="search-form d-none d-md-block" action="#">
+              <i class="icon-magnifier"></i>
+              <input type="search" class="form-control" placeholder="Rechercher...." title="Cherche ici" name="search">
+            </form>-->
+            {% endblock %}
+            <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
+              <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <img class="img-xs rounded-circle ml-2" src="{% static '/images/faces/profilphoto.png' %}" alt="Profile image"> <span class="font-weight-normal"> {{profile}}</span></a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                <div class="dropdown-header text-center">
+                  <img class="img-md rounded-circle" src="{% static '/images/faces/profilphoto.png' %}" alt="Profile image">
+                  <p class="mb-1 mt-3">{{profile}}</p>
+                  <p class="font-weight-light text-muted mb-0">{{email}}</p>
+                </div>
+                <a class="dropdown-item" href="{% url 'logout' %}"><i class="dropdown-item-icon icon-power text-primary"></i>Déconnexion</a>
+              </div>
+            </li>
+          </ul>
+        
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item nav-profile">
+              <a href="#" class="nav-link">
+                <div class="profile-image">
+                  <img class="img-xs rounded-circle" src="{% static '/images/faces/profilphoto.png' %}" alt="profile image">
+                  <div class="dot-indicator bg-success"></div>
+                </div>
+                <div class="text-wrapper">
+                  <p class="profile-name">{{profile}}</p>
+                  <p class="designation">Administrateur</p>
+                </div>
+              
+              </a>
+            </li>
+            <li class="nav-item nav-category">
+              <span class="nav-link">Tableau de bord</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <span class="menu-title">Tableau de bord</span>
+                <i class="icon-screen-desktop menu-icon"></i>
+              </a>
+            </li>
+
+            <li class="nav-item nav-category"><span class="nav-link">VLANs</span></li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="collapse" href="#vlan" aria-expanded="false" aria-controls="vlan">
+                <span class="menu-title">Gérer les vlans</span>
+                <i class="icon-layers menu-icon"></i>
+              </a>
+              <div class="collapse" id="vlan">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'vlan' %}">Créer un VLAN &nbsp;<i class="icon-pencil menu-icon"></i></a></li>
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'historyvlan' %}">Historiques &nbsp;<i class="icon-chart menu-icon"></i></a></li>
+                </ul>
+              </div>
+            </li>
+
+           <!--<li class="nav-item nav-category"><span class="nav-link">VLANs</span></li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'vlan' %}">
+                <span class="menu-title">Créer un VLAN</span>
+                <i class="icon-layers menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'historyvlan' %}">
+                <span class="menu-title">Historiques</span>
+                <i class="icon-chart menu-icon"></i>
+              </a>
+            </li>-->
+
+            <li class="nav-item nav-category"><span class="nav-link">Sous-réseaux</span></li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="collapse" href="#sousreseau" aria-expanded="false" aria-controls="sousreseau">
+                <span class="menu-title">Gérer les sous-réseaux</span>
+                <i class="icon-globe menu-icon"></i>
+              </a>
+              <div class="collapse" id="sousreseau">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'sousreseau' %}">Créer un sous-réseau &nbsp;<i class="icon-pencil menu-icon"></i></a></li>
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'historysousreseau' %}">Historiques &nbsp;<i class="icon-chart menu-icon"></i></a></li>
+                </ul>
+              </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#ipadresse" aria-expanded="false" aria-controls="ipadresse">
+                  <span class="menu-title">Adresses IP</span>
+                  <i class="icon-globe-alt menu-icon"></i>
+                </a>
+                <div class="collapse" id="ipadresse">
+                  <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'historyadresseip' %}">Historiques &nbsp;<i class="icon-chart menu-icon"></i></a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'rapport' %}">Rapport &nbsp;<i class="icon-doc menu-icon"></i></a></li>
+                  </ul>
+                </div>
+               </li>
+
+            <!--<li class="nav-item nav-category"><span class="nav-link">Sous-réseaux</span></li>
+            <li class="nav-item">
+              <a class="nav-link" href="" >
+                <span class="menu-title">Créer un sous-réseau </span>
+                <i class="icon-globe menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item"> 
+              <a class="nav-link" href="">
+                <span class="menu-title">Adresses IP</span>  
+                <i class="icon-doc menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">
+                <span class="menu-title">Historiques</span>
+                <i class="icon-chart menu-icon"></i>
+              </a>
+            </li>-->
+          </ul>
+        </nav>
+ 
+        <div class="main-panel">
+          <div class="content-wrapper">
+
+ 
+    {% block body %}      {% endblock %}
+
+          </div>
+
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2021</span>
+              <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Gestion des adresses IP (IPAM)</span>
+            </div>
+          </footer>
+      
+      <!-- page-body-wrapper ends -->
+    </div>
+</div>
+    <!-- container-scroller -->
+    </div>
+    <!-- plugins:js -->
+    {% block javascripts %}
+    {% load static %}
+    <script src="{% static '/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static '/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static '/vendors/moment/moment.min.js' %}"></script>
+    <script src="{% static '/vendors/daterangepicker/daterangepicker.js' %}"></script>
+    <script src="{% static '/vendors/chartist/chartist.min.js' %}"></script>
+    <script src="{% static '/vendors/select2/select2.min.js' %}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{% static '/js/off-canvas.js' %}"></script>
+    <script src="{% static '/js/misc.js' %}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{% static '/js/dashboard.js' %}"></script>
+    <script src="{% static '/js/chartist.js' %}"></script>
+    <script src="{% static '/js/select2.js' %}"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.js"></script>
+    <script src="{% static '/assets/jquery.min.js' %}"></script>
+    <script src="{% static '/assets/timepicker.js' %}"></script>
+    <script src="{% static '/js/bootstrap.min.js' %}"></script>
+    <!-- End custom js for this page -->
+    <script>
+      /*window.onload = function() {
+          var duration = 3000; //1 seconds
+          setTimeout(function () { $('#mainAlertMessage').hide(); }, duration);
+      };*/
+    var canvas2= $("#DoughnutChart").get(0).getContext("2d");
+    var utilis = document.getElementById("util").value;
+    var dispo = document.getElementById("disp").value;
+        var doughnutPieData2 = {
+            datasets: [{
+                data: [utilis,dispo],
+                backgroundColor: [
+                    '#ff4d6b',
+                    '#38ce3c'
+                ],
+                borderColor: [
+                    '#ff4d6b',
+                    '#38ce3c'
+                ],
+            }],
+    
+                    // These labels appear in the legend and in the tooltips when hovering different arcs
+            labels: [
+                'Utilisé',
+                'Disponible'
+            ]
+        };
+        
+        var doughnutPieOptions2 = {
+          cutoutPercentage: 75,
+          animationEasing: "easeOutBounce",
+          animateRotate: true,
+          animateScale: false,
+          responsive: true,
+          maintainAspectRatio: true,
+          showScale: true,
+          legend: {
+              display: false
+          },
+          layout: {
+              padding: {
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0
+              }
+          }
+      };
+       
+        var doughnutChart = new Chart(canvas2, {
+            type: 'doughnut',
+            data: doughnutPieData2,
+            options: doughnutPieOptions2
+        });
+
+        function funcsc(idsr){   
+          var nouveau = "en cours...";
+        document.getElementById(idsr).innerHTML = nouveau;
+        document.getElementById(idsr).style.color = 'red';
+        setTimeout("location.reload();",6000);
+        }
+        setTimeout(funcsc, 5000);
+
+
+        function funcmessipadd(){   
+          var mes = "Attendez un moment pour terminer...";
+        document.getElementById('messipadd').innerHTML = mes;
+        }
+    </script>
+
+    <script type="text/javascript">
+        function makePdf(){
+          var ad = document.getElementById("ad").value;
+          var doc = new jsPDF('p', 'pt');
+          var elem = document.getElementById("tbladressip");
+          var res = doc.autoTableHtmlToJson(elem);
+          doc.autoTable(res.columns, res.data);
+          doc.save(ad+".pdf");
+        }
+    </script>
+      
+    <script type="text/javascript">
+        $(function(){
+          $('.timepicker').timepicker({
+                showInputs: false,
+                showMeridian: false
+
+            })
+        });
+       
+    </script>
+<SCRIPT LANGUAGE="JavaScript">
+  function PopupCentrer(page,largeur,hauteur,options) {
+    var top=(screen.height-hauteur)/2;
+    var left=(screen.width-largeur)/2;
+    window.open(page,"","top="+top+",left="+left+",width="+largeur+",height="+hauteur+","+options);
+  }
+</SCRIPT>
+<script type="text/javascript">
+    var select = document.getElementById('classe');
+    function show(){
+      var value = select.options[select.selectedIndex].value;
+      document.getElementById('messclass').innerHTML = value;
+    }
+    select.onchange=show;
+     show();
+</script>
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Résumé du sous-réseau {% endblock %}
+
+{% block body %}
+<div class="row">
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Résumé du sous-réseau </h4>
+       <br><tr>
+        <div class="row">
+            <div class="col-md-6">
+              <address>
+                <p class="font-weight-normal"><i>Adresse de sous-réseau</i></p><br>
+                <p class="font-weight-normal"> <i>Nom du sous-réseau</i></p><br>
+                <p class="font-weight-normal"><i>Taille du sous-réseau</i></p><br>
+                <p class="font-weight-normal"> <i>Nom du VLAN</i></p><br>
+                <p class="font-weight-normal"><i>Date de la dernière analyse</i></p><br>
+                <p class="font-weight-normal"><i>État de l'analyse</i></p>
+              </address>
+            </div>
+            <div class="col-md-6">
+              <address class="text-primary">
+                  {% for s in sresx %}
+                <p> {{s.adresse}} </p><br>
+                <p> {{s.nom}}</p><br>
+                <p> {{s.taille}} </p><br>
+                <p> {{s.vlan.nom}}</p><br>
+                {% if s.derniere_scan == None %}
+                <p style="color: white;">None</p><br>
+                {% else %}
+                <p> {{s.derniere_scan}} </p><br>
+                {% endif %}
+                {% if s.etat == True %}
+                <p> Scanné </p>
+                {% else %}
+                <p>Non Scanné</p>
+                {% endif %}
+                {% endfor %}
+              </address>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Disponibilité IP </h4>
+        <div class="aligner-wrapper">
+          <canvas id="DoughnutChart" height="140"></canvas>
+          <div class="wrapper d-flex flex-column justify-content-center absolute absolute-center">
+            <h2 class="text-center mb-0 font-weight-bold">{{tot}}</h2>
+            <small class="d-block text-center text-muted  font-weight-semibold mb-0">Adresse IP</small>
+          </div>
+        </div>
+        
+        <div class="wrapper mt-4 d-flex flex-wrap align-items-cente">
+          <div class="d-flex">
+            <span class="square-indicator bg-danger ml-2"></span>
+            <p class="mb-0 ml-2">Utilisé</p>
+          </div>
+          <div class="d-flex">
+            <span class="square-indicator bg-success ml-2"></span>
+            <p class="mb-0 ml-2">Disponible</p>
+          </div>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" value="{{utilis}}" id="util">
+<input type="hidden" value="{{dispo}}" id="disp">
+{% endblock %}

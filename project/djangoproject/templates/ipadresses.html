@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block meta %} <meta charset="utf-8" http-equiv="refresh" content="5">{% endblock %}
+{% block title %}Adresses IP{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+        <div class="d-sm-flex align-items-center mb-4">
+            <h4 class="card-title mb-sm-0">Liste des adresses IP </h4>
+            <form class="forms-sample">
+                {% csrf_token %}
+                <a href="{% url 'ipadresses' sreseau %}?ad={{p}}&etat=True" class="btn-sm "><button type="button" class="btn btn-inverse-danger btn-icon" title="IP Utilisées"><i class="icon-check"></i></button></a>
+                <a href="{% url 'ipadresses' sreseau %}?ad={{p}}&etat=False" class="btn-sm"><button type="button" class="btn btn-inverse-success btn-icon" title="IP Disponibles"><i class="icon-close"></i></button></a>
+                <a href="{% url 'ipadresses' sreseau %}?ad={{p}}" class="btn-sm"><button type="button" class="btn btn-inverse-light btn-icon" title="Tout les IP"><i class="icon-refresh"></i></button></a>
+            </form>
+            <a href="{% url 'sousreseau' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-dark btn-sm">Sous-réseaux</button></a>
+           
+          </div>
+       
+        <div class="table-responsive border rounded p-1">
+            <table class="table">
+            <thead>
+                <tr>
+                <th class="font-weight-bold">Sous-réseau</th>
+                <th class="font-weight-bold"></th>
+                <th class="font-weight-bold">Utilisées</th>
+                <th class="font-weight-bold">Disponibles</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label class="badge badge-primary">{{p}}</label></td>
+                    <td></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="badge badge-danger">{{utilis}}</label></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="badge badge-success">{{disp}}</label></td>
+                </tr>
+                </tbody>
+               
+            <thead>
+                <tr>
+                <th class="font-weight-bold">Adresses IP</th>
+                <th class="font-weight-bold">Nom d'hôte </th>
+                <th class="font-weight-bold">Attribuer</th>
+                <th class="font-weight-bold">Libérer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ip in page %}
+                <tr>
+                    
+                    <td>{% if ip.etat == False %} 
+                        <button class="btn-sm badge-success">{{ip.adresse}}</button>
+                        {% else %} 
+                        <button class="btn-sm badge-danger">{{ip.adresse}}</button>
+                        {% endif %}
+                    </td>
+                    {% if ip.etat == True %} 
+                    <td>{{ip.nom}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                   {% if ip.etat == False %} 
+                    <td><a href="" ><button type="button" class="btn btn-inverse-danger btn-icon" onClick='PopupCentrer("/attadressesip/{{ip.id}}?idadsr={{sreseau}}",500,400,"menubar=no,scrollbars=no,statusbar=no")' ><i class="icon-lock"></i></button></a></td>
+                   {% else %}
+                    <td></td>
+                   {% endif %}
+                   {% if ip.etat == True %} 
+                    <td><a href="{% url 'anulattribipadresses' ip.id ip.nom %}?idadsr={{sreseau}}" class="btn-sm"><button type="button" class="btn btn-inverse-success btn-icon"><i class="icon-lock-open"></i></button></a></td>
+                   {% else %}
+                    <td></td>
+                   {% endif %}
+                  </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex mt-4 flex-wrap">
+            <nav class="ml-auto">
+              <ul class="pagination separated pagination-info">
+                <li class="page-item"><a href="{{prev_page_url}}" class="page-link"><i class="icon-arrow-left"></i></a></li>
+ <!-----------------------------------------------------------------
+                {% for n in page.paginator.page_range %}
+                {% if etat %}
+                   {% if page.number == n %}
+                <li class="page-item active"><a href="?pagee={{ n }}&ad={{ p }}&etat={{ etat }}" class="page-link">{{ n }}</a></li>
+                   {% elif n > page.number|add:-3 and n < page.number|add:3 %}
+                <li class="page-item"><a href="?pagee={{ n }}&ad={{ p }}&etat={{ etat }}" class="page-link">{{ n }}</a></li>
+                   {% endif %}
+                {% else %}
+                   {% if page.number == n %}
+                   <li class="page-item active"><a href="?page={{ n }}&ad={{ p }}" class="page-link">{{ n }}</a></li>
+                      {% elif n > page.number|add:-3 and n < page.number|add:3 %}
+                   <li class="page-item"><a href="?page={{ n }}&ad={{ p }}" class="page-link">{{ n }}</a></li>
+                      {% endif %}
+                {% endif %}
+                {% endfor %} 
+ ---------------------------------------------------->
+                <li class="page-item"><a href="{{next_page_url}}" class="page-link"><i class="icon-arrow-right"></i></a></li>
+             
+            </ul>
+            </nav>
+          </div>
+
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if sreseau.id == idsr.0.sousreseau_id %}
+    Consulter les adresses IP
+    {% else %}
+    Créer des adresses IP
+    {% endif %}
+{% endblock %}
+
+
+{% block body %}
+
+  <div class="row">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-sm-flex align-items-center mb-4">
+        {% if sreseau.id == idsr.0.sousreseau_id %}
+          <h4 class="card-title">Consulter les adresses IP</h4>
+        {% else %}
+          <h4 class="card-title">Créer des adresses IP</h4>
+        {% endif %}
+        </div>
+        <marquee><p style="color:blue;text-align:center"; id="messipadd"></p></marquee>
+        <form class="forms-sample" method="POST" action="{% url 'ipsousreseau' sreseau.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="exampleInputName1">Adresse de sous-réseau</label>
+            <input type="text" class="form-control" id="exampleInputName1" name="adresse" value="{{sreseau.adresse}}" readonly>
+          </div>
+          <input type="hidden" name="taille" value="{{sreseau.taille}}"> 
+        {% if sreseau.id == idsr.0.sousreseau_id %}
+           <a href="{% url 'ipadresses' sreseau.id %}?ad={{sreseau.adresse}}" class="text-dark ml-auto mb-3 mb-sm-0"><button type="button" class="btn btn-primary mr-1">Consulter</button></a>
+           <a href="{% url 'sousreseau' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-dark mr-1">Annuler</button></a>   
+           {% else %}
+          <button type="submit" class="btn btn-primary mr-1" onclick="funcmessipadd();">Créer </button>
+          <a href="{% url 'sousreseau' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-dark mr-1">Annuler</button></a>
+        {% endif %}
+        
+        </form>
+      </div>
+    </div>
+  </div>
+   </div>         
+
+{% endblock %}

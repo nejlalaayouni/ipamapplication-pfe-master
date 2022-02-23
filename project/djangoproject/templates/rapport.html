@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Rapport {% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+        <div class="d-sm-flex align-items-center mb-4">
+            <h4 class="card-title mb-sm-0">Résumé de l'utilisation IP </h4>
+        </div>
+        <form class="forms-sample" method="POST" action="{% url 'rapport' %}" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col">
+                    <label for="exampleSelectGender">Adresse du sous-réseau</label>
+                    <select class="form-control js-example-basic-single"  name="sreseau" required="required">
+                      <option>Choisissez une adresse</option>
+                        {% for sres in lst %} 
+                      <option value="{{sres.id}}">{{sres.adresse}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="col"> </div>
+                <button type="button"  onclick="makePdf()" class="btn btn-dark btn-icon" title="Télècharger"><i class="fas fa-file-pdf"></i></button>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Envoyer</button>
+        </form><br>
+        <div class="table-responsive border rounded p-1">
+           
+            <table class="table" id="tbladressip" >
+            <thead>
+                <tr>
+                <th class="font-weight-bold">Adresse du sous-réseau</th>
+                {% for s in adrs %} 
+                <th>{{s.adresse}}</th>
+                <input type="hidden" value="{{s.adresse}}" id="ad">
+                {% endfor %}
+                <th></th>
+                <th></th>
+                </tr>
+                <tr>
+                <th class="font-weight-bold">Nom d'hôte</th>
+                <th class="font-weight-bold">Adresse IP</th>
+                <th class="font-weight-bold">État</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sr in adsres %}
+                <tr>
+                   <td>{{sr.nom}}</td>
+                   <td>{{sr.adresse}}</td>
+                   {% if sr.utliser == True %}
+                   <td><div class="badge badge-danger">Utilisé</div></td>
+                   {% elif sr.disponible == False %}
+                   <td><div class="badge badge-success">Disponible</div></td>
+                   {% endif %}
+               </tr>
+               {% endfor %}
+               
+            </tbody>
+            </table>
+        </div>
+
+        </div>
+        </div>
+        </div>
+        </div>
+
+
+
+{% endblock %}

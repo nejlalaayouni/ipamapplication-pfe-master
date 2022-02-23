@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+<div class="row purchace-popup">
+  <div class="col-12 stretch-card grid-margin">
+    <div class="card card-secondary">
+      <span class="card-body d-lg-flex align-items-center">
+        <p class="mb-lg-0">Pour l'analyse planifiée, cliquez sur "Créer une tâche". </p>
+        <a href="{% url 'tacheanalyse' %}"  class="btn btn-primary purchase-button btn-sm my-1 my-sm-0 ml-auto">Créer une tâche</a>
+        <button class="close popup-dismiss ml-2">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 grid-margin">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-sm-flex align-items-baseline report-summary-header">
+              <h5 class="font-weight-semibold">Résumé du rapport </h5> 
+            </div>
+          </div>
+        </div>
+        <div class="row report-inner-cards-wrapper">
+          <div class=" col-md -6 col-xl report-inner-card">
+            <div class="inner-card-text">
+              <span class="report-title">VLAN</span>
+              <h4>{{vlans}}</h4>
+            </div>
+            <div class="inner-card-icon bg-info">
+              <i class="icon-layers"></i>
+            </div>
+          </div>
+  
+          <div class="col-md-6 col-xl report-inner-card">
+            <div class="inner-card-text">
+              <span class="report-title">Sous-réseau</span>
+              <h4>{{sousreseaux}}</h4>
+            </div>
+            <div class="inner-card-icon bg-success">
+              <i class="icon-globe"></i>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl report-inner-card">
+            <div class="inner-card-text">
+              <span class="report-title">Adresse IP</span>
+              <h4>{{adressesip}}</h4>
+            </div>
+            <div class="inner-card-icon bg-warning">
+              <i class="icon-globe-alt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+            
+            <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="font-weight-semibold">Adresses IP</h4>
+                    <div class="aligner-wrapper">
+                      <canvas id="sessionsDoughnutChart" height="210"></canvas>
+                      <div class="wrapper d-flex flex-column justify-content-center absolute absolute-center">
+                        <h2 class="text-center mb-0 font-weight-bold">{{adressesip}}</h2>
+                        <small class="d-block text-center text-muted  font-weight-semibold mb-0">Total</small>
+                      </div>
+                    </div>
+                    <div class="wrapper mt-4 d-flex flex-wrap align-items-cente">
+                      <div class="d-flex">
+                        <span class="square-indicator bg-danger ml-2"></span>
+                        <p class="mb-0 ml-2">Attribué</p>
+                      </div>
+                      <div class="d-flex">
+                        <span class="square-indicator bg-success ml-2"></span>
+                        <p class="mb-0 ml-2">Non attribué</p>
+                      </div>
+                    <!-- <div class="d-flex">
+                        <span class="square-indicator bg-warning ml-2"></span>
+                        <p class="mb-0 ml-2">Réattribué</p>
+                      </div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Sous-réseaux</h4>
+                    <form class="forms-sample" method="GET" enctype="multipart/form-data"> 
+                      {% csrf_token %}
+                      <div class="form-group">
+                              <select class="form-control js-example-basic-single"  onchange="location = this.value;" name="sreseau" required="required">
+         
+                                <option>Choisissez une adresse</option>
+                           
+                                {% for sres in sr %} 
+                                  {% if sres.adresse == ad  %}
+                                    <option selected>{{ad}}</option>
+                                  {% else %}
+                                    <option value="{% url 'dashboard' %}?idsr={{sres.id}}&ad={{sres.adresse}}"> {{sres.adresse}}</option>
+                                  {% endif %}
+                                {% endfor %}
+                              </select>
+                  </form>
+
+                 
+                  <div class="aligner-wrapper">
+                    <br>
+                    <canvas id="DoughnutChart" height="140"></canvas>
+                    <div class="wrapper d-flex flex-column justify-content-center absolute absolute-center">
+                      <h2 class="text-center mb-0 font-weight-bold">{{tot}}</h2>
+                      <small class="d-block text-center text-muted  font-weight-semibold mb-0">Adresse IP</small>
+                    </div>
+                  </div>
+                  
+                  <div class="wrapper mt-4 d-flex flex-wrap align-items-cente">
+                    <div class="d-flex">
+                      <span class="square-indicator bg-danger ml-2"></span>
+                      <p class="mb-0 ml-2">Utilisé</p>
+                    </div>
+                    <div class="d-flex">
+                      <span class="square-indicator bg-success ml-2"></span>
+                      <p class="mb-0 ml-2">Disponible</p>
+                    </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+           
+<input type="hidden" value="{{attrib}}" id="att">
+<input type="hidden" value="{{nonattrib}}" id="noatt">
+
+<input type="hidden" value="{{utilis}}" id="util">
+<input type="hidden" value="{{dispo}}" id="disp">
+
+{% endblock %}

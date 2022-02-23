@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Tâche d'analyse{% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-sm-flex align-items-center mb-4">
+          <h4 class="card-title">Modifier une Tâche d'analyse</h4>
+        </div>
+        <p class="card-description"><i class="icon-info"></i> Informations sur Tâche d'analyse</p>
+          <form class="form-sample" method="POST" action="{% url 'modiftacheanalyse' tch.id %}">
+            {% csrf_token %}
+
+          <div class="form-group row">
+              <div class="col">
+                <label for="exampleInputName1">Nom de la tâche</label>
+                <input type="text" class="form-control" id="exampleInputName1" name="tache" value="{{tch.nom}}" >
+              </div>
+             <div class="col">
+              <label>Sous-réseaux</label>
+              <select class="form-control js-example-basic-single" name="idsreseau" >
+                {% for sres in sr %}
+                  {% if sres.id == tch.sousreseau_id %}
+                    <option value={{sres.id}} selected>{{sres.adresse}}</option>
+                  {% else %}
+                    <option value={{sres.id}}>{{sres.adresse}}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+            <div class="form-group row">
+              <div class="col">
+                <div class="bootstrap-timepicker">
+                  <div class="form-group">
+                    <label>Temps</label>
+  
+                      <div class="input-group">
+                        <input type="text" class="form-control timepicker" name="temps" value="{{tch.temp}}" >
+  
+                        <div class="input-group-addon">
+                            <span class="input-group-text"><i class=" icon-clock "></i></span>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+                
+              </div>
+              <div class="col">
+                <label>Date <abbr style="color: red;">*</abbr></label>
+                <input type="date" class="form-control" id="exampleInputName1" name="date" value="{{tch.date_tache}}" required>
+              </div>
+            </div>
+
+            <div class="form-group row">
+            <div class="col">
+              <label>Activer / Désactiver</label>
+              <select class="form-control js-example-basic-single" name="etat" >
+                {% if tch.etat == True %}
+                <option value="True" selected>Activer</option>
+                <option value="False" >Désactiver</option>
+                {% else %}
+                <option value="True" >Activer</option>
+                <option value="False" selected>Désactiver</option>
+                {% endif %}
+              </select>
+            </div>
+            <div class="col"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mr-2">Modifier</button>
+            <a href="{% url 'tacheanalyse' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-dark">Annuler</button></a>
+          </form>
+        </div>
+      </div>
+    </div>
+     </div>   
+
+{% endblock %}

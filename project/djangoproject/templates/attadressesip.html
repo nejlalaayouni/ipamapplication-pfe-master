@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Adresses IP{% endblock %}
+
+{% block body %}
+
+<script type="text/javascript" language="javascript">
+
+  function twFermer() {
+    window.close();
+  }
+  // Fin -->
+  </script>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+        <div class="d-sm-flex align-items-center mb-4">
+            <form class="forms-sample" method="POST" action="{% url 'attribipadresses' idadip %}?idadsr={{sreseau}}" enctype="multipart/form-data"> 
+                {% csrf_token %}
+                {% if messages %}{% for mess in messages %}
+                 <div class="alert alert-danger" id="mainAlertMessage">
+                 <button class="close" data-dismiss="alert">×</button>
+                 <strong>{{mess}} </strong></div>
+                 {% endfor %} {% endif %}
+           
+                <div class="form-group">
+              
+                  {% if messages %}
+                        <select class="form-control js-example-basic-single"  name="hote" required="required" disabled>
+                          <option>Choisissez un nom d'hôte </option>
+                        {% for ip in sr %}
+                          <option value="{{ip.nom}}">{{ip.nom}}</option>
+                        {% endfor %}
+                        </select>
+                  {% else %}
+                        <select class="form-control js-example-basic-single"  name="hote" required="required" >
+                          <option>Choisissez un nom d'hôte </option>
+                        {% for ip in sr %}
+                          <option value="{{ip.nom}}">{{ip.nom}}</option>
+                        {% endfor %}
+                        </select>
+                  {% endif %}
+                </div>
+                {% if messages %}
+                <button type="submit" class="btn btn-danger" disabled>Ok</button>
+                {% else %}
+                  <button type="submit" class="btn btn-danger" >Ok</button>
+                {% endif %}
+                  <button type="button" onclick="twFermer()" class="btn btn-inverse-dark">Fermer la fenêtre</button>
+                </form>
+
+
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

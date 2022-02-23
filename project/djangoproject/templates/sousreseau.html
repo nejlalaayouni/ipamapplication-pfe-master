@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Sous-réseaux{% endblock %}
+{% block search %} 
+<form class="search-form d-none d-md-block" action="{% url 'sousreseau' %}">
+    <i class="icon-magnifier"></i>
+    <input type="search" class="form-control" placeholder="Rechercher...." title="Cherche ici" name="search">
+</form>
+{% endblock %}
+{% block body %}
+    
+        <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+            <div class="d-sm-flex align-items-center mb-4">
+                <h4 class="card-title mb-sm-0">Liste des sous-réseaux </h4>
+                <a href="{% url 'ajoutsousreseau' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-success btn-fw"><i class="icon-pencil animated"></i>&nbsp;Ajouter un sous réseau</button></a>
+            </div>
+            <div class="table-responsive border rounded p-1">
+                <table class="table">
+                <thead>
+                    <tr>
+                      <th class="font-weight-bold">IP</th>
+                    <th class="font-weight-bold">Adresse</th>
+                    <th class="font-weight-bold">Nom </th>
+                    <th class="font-weight-bold">Taille</th>
+                   <!--<th class="font-weight-bold">Utilisation</th>-->
+                    <th class="font-weight-bold">État de l'analyse</th>
+                    <th class="font-weight-bold">Date de la dernière analyse</th>
+                    <th class="font-weight-bold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sr in page %}
+                    <tr>
+                      <td><a href="{% url 'ipsousreseau' sr.id %}" > <button type="button" class="btn btn-outline-secondary btn-rounded btn-icon btn-sm"><i class="icon-eye text-primary"></i></button></a></td>
+                       <td>{{sr.adresse}}</a></td>
+                       <td>{{sr.nom}}</td>
+                       <td>{{sr.taille}}</td>
+                      <!--<td><div class="progress"><!--class="progress-bar bg-success"
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{utilis}}"
+                           aria-valuemin="0" aria-valuemax="100" value="{{utilis}}">
+                           {{utilis}}%
+                        </div>
+                        <!--<progress  value="{{utilis}}" max="100">{{utilis}} %</progress>
+                      </div></td>-->
+                      {% if sr.etat == False %} 
+                      <td id="{{sr.id}}"><label class="badge badge-danger">Non Scanné </label></td>
+                      {% elif sr.etat == True %} 
+                      <td id="{{sr.id}}"><label class="badge badge-success">Scanné </label></td>
+                      {% endif %}
+                      {% if sr.derniere_scan == NULL %}
+                      <td></td>
+                      {% else %}
+                       <td>{{sr.derniere_scan}}</td>
+                      {% endif %}
+                       <td> 
+
+                      {% if sr.etat == True %}
+                        <a href="{% url 'scan' sr.id %}" ><button type="button" class="btn btn-inverse-info btn-rounded btn-icon" title="Scanner">
+                          <i class="icon-hourglass"></i>
+                        </button></a>
+                      {% else %}
+                      <a href="{% url 'cron_job' sr.id %}" ><button onclick="funcsc('{{sr.id}}');" type="button" class="btn btn-inverse-info btn-rounded btn-icon" title="Scanner">
+                        <i class="icon-hourglass"></i>
+                      </button></a>
+                      {% endif %}
+
+                        <a href="{% url 'detailsousreseau' sr.id %}"><button type="button" class="btn btn-inverse-warning btn-rounded btn-icon" title="Détails">
+                          <i class="icon-doc"></i></button></a>
+                     <a onclick="return confirm('Etes-vous sûr de supprimer?')" href="{% url 'suppsousreseau' sr.id %}"><button type="button" class="btn btn-inverse-danger btn-rounded btn-icon" title="Supprimer">
+                        <i class="icon-trash"></i>
+                      </button></a>
+                    </td>
+                    
+                   </tr>
+                   {% endfor %}
+                   
+                </tbody>
+                </table>
+            </div>
+            <div class="d-flex mt-4 flex-wrap">
+                <nav class="ml-auto">
+                  <ul class="pagination separated pagination-info">
+                    <li class="page-item"><a href="{{prev_page_url}}" class="page-link"><i class="icon-arrow-left"></i></a></li>
+                    {% for n in page.paginator.page_range %}
+                       {% if page.number == n %}
+                    <li class="page-item active"><a href="?page={{ n }}" class="page-link">{{ n }}</a></li>
+                       {% elif n > page.number|add:-3 and n < page.number|add:3 %}
+                    <li class="page-item"><a href="?page={{ n }}" class="page-link">{{ n }}</a></li>
+                       {% endif %}
+                    {% endfor %} 
+                    <li class="page-item"><a href="{{next_page_url}}" class="page-link"><i class="icon-arrow-right"></i></a></li>
+                 
+                </ul>
+                </nav>
+              </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            
+
+{% endblock %}

@@ -1,0 +1,182 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <title>IPAM</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+
+        {% load static %}
+        <link rel="stylesheet" href="{% static '/css1/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static '/css1/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" href="{% static '/css1/fontAwesome.css' %}">
+        <link rel="stylesheet" href="{% static '/css1/tooplate-style.css' %}">
+
+        <script src="{% static '/js1/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
+        <style>
+
+	.item {
+	    position:relative;
+	    padding-top:5px;
+	    display:inline-block;
+	}
+	.notify-badge{
+	    position: absolute;
+	    right:8px;
+	    top:10px;
+	    background:red;
+	    text-align: center;
+	    border-radius: 10px 10px 10px 10px;
+	    color:white;
+	    padding:8px 8px;
+	    font-size:10px;
+	}
+
+	.notify-badge2{
+	    position: absolute;
+	    right:8px;
+	    top:10px;
+	    background:green;
+	    text-align: center;
+	    border-radius: 10px 10px 10px 10px;
+	    color:white;
+	    padding:8px 8px;
+	    font-size:10px;
+	}
+
+	</style>
+    </head>
+    <body>
+        <section class="first-gallery-section">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="text-content">
+                   <h2>IPAM</h2>
+                    <div class="line-dec"></div>
+                    <span>Gestion des adresses IP</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+        
+          <section class="send-to-home">
+            <div class="container">
+              <div class="row">
+                {% for v in vlans %}
+                <div class="col-md-3">
+                  <div class="back-to-home">
+                    <div class="primary-button">
+                      <a href="{% url 'demo' %}?idvlan={{v.id}}">{{v.nom}}</a><br>
+                      <span>{{v.description}}</span>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </section>
+
+        
+          <div class="content-wrapper">
+          
+            <div class="inner-container container">
+                <div class="projects-holder-3">
+                    <div class="filter-categories">
+                        <ul class="project-filter">
+                        {% for sr in sousreseaux %}
+                            <li class="filter" data-filter="{{sr.adresse}}" ><a href="{% url 'demo' %}?idvlan={{sr.vlan.id}}&idsr={{sr.id}}"><span>{{sr.adresse}}</span></a></li>
+                        {% endfor %}
+                        </ul>
+                      
+                    </div>
+                    {% if idsr == NULL %}
+                      <p> </p>
+                    {% else %}
+                      <p> <b style="color: green;">{{disp}}</b> &nbsp;IP(s)&nbsp;Disponible(s)<br>
+                          <b style="color: red;">{{utilis}}</b> &nbsp;IP(s)&nbsp;Utilisée(s)</p>
+                    {% endif %}
+                    <div class="projects-holder">
+                        <div class="row">
+                        {% for ip in page %}
+                            <div class="col-md-3 col-sm-6 project-item mix {{ip.sousreseau.adresse}}">
+                                <div class="service-item">
+                                    <div class="icon">
+                                    <div class="item">
+                                      {% if ip.etat == 1 %}
+                                      <span class="notify-badge"></span>
+                                      {% else %}
+                                      <span class="notify-badge2"></span>
+                                      {% endif %}
+                                      <img src="{% static '/img/second-icon.png' %}" alt="">
+                                    </div>
+                                    </div>
+                                    {% if ip.etat == 1 %}
+                                    <h4>{{ip.nom}}:&nbsp;{{ip.adresse}}</h4>
+                                    <p> État : &nbsp;Utilisée <br>
+                                      Nom du sous-réseau : &nbsp;{{ip.sousreseau.nom}}<br>
+                                      Adresse du sous-réseau : &nbsp;{{ip.sousreseau.adresse}}</p>
+                                    {% else %}
+                                    <h4>{{ip.adresse}}</h4>
+                                    <p> État : &nbsp;Disponible <br>
+                                      Nom du sous-réseau : &nbsp;{{ip.sousreseau.nom}}<br>
+                                      Adresse du sous-réseau : &nbsp;{{ip.sousreseau.adresse}}</p>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                         
+                        {% endfor %}
+                       
+                        </div>
+                    
+                    </div>
+                    {% if page.has_next %}
+                    <p class="text-center">
+                      <a href="?idvlan={{idvlan}}&idsr={{idsr}}&page={{ page.next_page_number }}"><button class="btn btn-dark" id="loadmoreBtn">Charger Plus</button></a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div> 
+        
+        <footer>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <p>Copyright &copy; 2021 Gestion des adresses IP (IPAM)</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+        {% load static %}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.onload=init;</script>
+        <script>window.jQuery || document.write('<script src=" /js1/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+        <script src="{% static '/js1/vendor/bootstrap.min.js' %}"></script>
+
+        <script src="{% static '/js1/plugins.js' %}"></script>
+        <script src="{% static '/js1/main.js' %}"></script>
+
+        <script>
+          $(document).ready(function(){
+              $("#loadmoreBtn").on('click',function(){
+                $.ajax({
+                  beforeSend:function(){
+                    $("#loadmoreBtn").addClass('disabled').text('Chargement..');
+                }
+              });
+            });
+          });
+        </script>
+    </body>
+</html>

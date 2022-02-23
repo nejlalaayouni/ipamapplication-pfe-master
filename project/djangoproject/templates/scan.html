@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Scanner IP{% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-sm-flex align-items-center mb-4">
+          <h4 class="card-title">Scanner IP</h4>
+         <!-- <a href="{% url 'sousreseau' %}" class="text-dark ml-auto mb-3 mb-sm-0"> <button type="button" class="btn btn-inverse-dark btn-sm">Liste des Sous-réseaux</button></a>-->
+        </div>
+     
+        <div class="template-demo">
+          <div class="col-md-12">
+                Adresse du sous-réseau :&nbsp;<label class="badge badge-primary">{{sreseau.adresse}}</label><br>
+                <label class="badge badge-success" style="color:#38ce3c;">nb</label> {{disp}} &nbsp;IP(s)&nbsp;Disponible(s)<br>
+                <label class="badge badge-danger" style="color: #ff4d6b;">nb</label> {{utilis}} &nbsp;IP(s)&nbsp;Utilisée(s)
+                <br><br>
+                {% for ip in ipadress %}
+            <div class="btn-group" role="group" aria-label="Basic example">
+       
+             {% if ip.etat == True %}
+              <button type="button" class="btn btn-danger btn-sm" title="
+              Adresse IP : &nbsp;{{ip.adresse}} 
+              Nom d'hôte : &nbsp;{{ip.nom}}
+              État : &nbsp;Utilisée
+              Nom du sous-réseau : &nbsp;{{ip.sousreseau.nom}}"></button>
+              {% elif ip.etat == False %}
+              <button type="button" class="btn btn-success btn-sm" title="
+              Adresse IP : &nbsp;{{ip.adresse}} 
+              Nom d'hôte : &nbsp;{{ip.nom}}
+              État : &nbsp;Disponible
+              Nom du sous-réseau : &nbsp;{{ip.sousreseau.nom}}"></button>
+              {% endif %}
+            
+            </div>
+            {% endfor %}
+        </div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+     </div>   
+
+{% endblock %}
